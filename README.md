@@ -1,6 +1,6 @@
 # GTM Export Tools
 
-GTM Export Tools gives you the power to easily manipulate your GTM container without giving others access to it. Upload your GTM export file and try it yourself on [https://gtm-export-tools.web.app]
+GTM Export Tools gives you the power to easily manipulate your GTM container without giving others access to it. Upload your GTM export file and try it yourself at [gtm-export-tools.web.app](https://gtm-export-tools.web.app)
 
 ## Functionality
 
@@ -22,4 +22,4 @@ Select the tags you want for your new container with ease.
 ### Set Tag Name for Monitoring
 GTM allows you to send the tag name when the tag fires so you can monitor your tag usage through a custom template. Instead of going through 150 tags manually, just click a button.
 
-*GTM Export Tools is maintained by (Dumky de Wilde)[https://www.dumkydewilde.nl]*
+*GTM Export Tools is maintained by [Dumky de Wilde](https://www.dumkydewilde.nl)*
