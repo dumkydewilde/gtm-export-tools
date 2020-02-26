@@ -264,7 +264,8 @@
       <v-col cols="12"
       class="text-center overline"
       >
-    GTM Export Tools by <a href="https://www.dumkydewilde.nl" class="black--text">Dumky de Wilde</a>.
+    GTM Export Tools by <a href="https://www.dumkydewilde.nl" class="black--text">Dumky de Wilde</a>. 
+    Feedback? Find me on <a href="https://www.twitter.com/dumkydewilde"  class="black--text">Twitter</a> or <a href="https://www.measure.chat"  class="black--text">Measure slack</a>.
       </v-col>
     </v-footer>
   </v-app>
