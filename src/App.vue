@@ -199,7 +199,7 @@
           
         </v-row>
         <v-row justify="space-between" align="start">
-          <v-col cols="4">
+          <v-col cols="3">
             <h2>Tags
               <v-checkbox 
               class="float-right mt-1" 
@@ -219,7 +219,7 @@
             :selectedFilters="selectedFilters"></ContainerItems>
           </v-col>
 
-          <v-col cols="4">
+          <v-col cols="3">
             <h2>Triggers
               <v-checkbox 
               class="float-right mt-1" 
@@ -238,7 +238,7 @@
             key="containerTriggers"></ContainerItems>
           </v-col>
 
-          <v-col cols="4">
+          <v-col cols="3">
             <h2>Variables
               <v-checkbox 
               class="float-right mt-1" 
@@ -255,6 +255,40 @@
             :folders="folders"
             :selectedFilters="selectedFilters"
             key="containerVariables"></ContainerItems>
+          </v-col>
+
+          <v-col cols="3">
+            <h2>Custom Templates
+              <v-checkbox 
+              class="float-right mt-1" 
+              label="Select All" 
+              v-model="selectAll.customTemplate"
+              color="grey"
+              dense
+              @change="toggleAll('customTemplate')"
+              ></v-checkbox>
+            </h2>
+            <ContainerItems 
+            :items="customTemplate" 
+            itemType="customTemplate" 
+            :selectedFilters="selectedFilters"
+            key="containerCustomTemplates"></ContainerItems>
+            
+            <h2 class="mt-7">Built-in Variables
+              <v-checkbox 
+              class="float-right mt-1" 
+              label="Select All" 
+              v-model="selectAll.builtInVariable"
+              color="grey"
+              dense
+              @change="toggleAll('builtInVariable')"
+              ></v-checkbox>
+            </h2>
+            <ContainerItems 
+            :items="builtInVariable" 
+            itemType="builtInVariable" 
+            :selectedFilters="selectedFilters"
+            key="containerBuiltInVariable"></ContainerItems>
           </v-col>
 
         </v-row>
@@ -280,7 +314,6 @@ import { track } from '@/main';
 export default {
   name: 'GTMExportTools',
   components: {
-    //ContainerTrigger,
     ContainerItems,
   },
 
@@ -305,12 +338,16 @@ export default {
     variables: [],
     triggers: [],
     folders: [],
+    builtInVariable: [],
+    customTemplate: [],
     selectedFilters: [],
     lastId: 900,
     selectAll: {
       tags: true,
       triggers: true,
-      variables: true,      
+      variables: true,
+      builtInVariable: true,
+      customTemplate: true      
     }
   }),
 
@@ -339,6 +376,16 @@ export default {
     },
     selectedVariables() {
       return this.variables.filter(v => {
+          return v.options.selected;
+      });
+    },
+    selectedBuiltInVariable() {
+      return this.builtInVariable.filter(v => {
+          return v.options.selected;
+      });
+    },
+    selectedCustomTemplate() {
+      return this.customTemplate.filter(v => {
           return v.options.selected;
       });
     },
@@ -410,6 +457,17 @@ export default {
         exportContainer.containerVersion.variable = this.selectedVariables.map(e => {
           return e.content;
         });
+        if(this.selectedBuiltInVariable) {
+          exportContainer.containerVersion.builtInVariable = this.selectedBuiltInVariable.map(e => {
+          return e.content;
+          });
+        }
+        if(this.selectedCustomTemplate) {
+          exportContainer.containerVersion.customTemplate = this.selectedCustomTemplate.map(e => {
+          return e.content;
+          });
+        }
+        
         exportContainer.containerVersion.folder = this.folders;
         var blob = new Blob([JSON.stringify(this.container)], { type: 'text/json' });
         var elem = window.document.createElement('a');
@@ -509,6 +567,30 @@ export default {
                   }
                 }
             });
+          this.builtInVariable = container.containerVersion.builtInVariable.map(content => {
+            return {
+                content: content,
+                options: {
+                  showDetails: false,
+                  selected: true,
+                  editing: false,
+                  hasDependencies: true,
+                  folder: false
+                  }
+                }
+            });
+          this.customTemplate = container.containerVersion.customTemplate.map(content => {
+            return {
+                content: content,
+                options: {
+                  showDetails: false,
+                  selected: true,
+                  editing: false,
+                  hasDependencies: true,
+                  folder: false
+                  }
+                }
+            });
           this.folders = container.containerVersion.folder || [];
 
           this.containerDetails = {
@@ -555,6 +637,15 @@ export default {
       // Variables not used
       const containerCheckForVariables = JSON.stringify([...this.tags, ...this.triggers, ...this.variables]);
       this.variables.forEach(e => {
+        if (containerCheckForVariables.indexOf("{{" + e.content.name + "}}") === -1) {
+          e.options.selected = false;
+          e.options.hasDependencies = false;
+          numItems++;
+        }
+      });
+
+      // Built In variables not used
+      this.builtInVariable.forEach(e => {
         if (containerCheckForVariables.indexOf("{{" + e.content.name + "}}") === -1) {
           e.options.selected = false;
           e.options.hasDependencies = false;
