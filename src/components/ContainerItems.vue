@@ -2,7 +2,7 @@
     <v-expansion-panels accordion multiple tile>
         <v-expansion-panel 
             v-for="item in filteredItems" 
-            :key="itemType + '-' + item.content[itemType + 'Id']" 
+            :key="itemType + '-' + item.content[idName[itemType]]" 
             v-model="item.options.showDetails" 
             >  
             <v-expansion-panel-header class="my-0 py-0" :color="!item.options.hasDependencies ? 'yellow lighten-5' : ''">
@@ -106,7 +106,7 @@
                     </div>
                  </div>
 
-                <div>
+                <div v-if="itemType != 'builtInVariable' && itemType != 'customTemplate'">
                     <h2 class="overline mt-5">Folder</h2>
                     <v-list-item dense>
                     <v-list-item-content>
@@ -156,8 +156,17 @@ export default {
         itemTypeColor: {
             tag: 'indigo',
             trigger: 'yellow darken-2',
-            variable: 'pink'
+            variable: 'pink',
+            builtInVariable: 'green darken-2',
+            customTemplate: 'brown'
         },
+        idName: {
+            tag: "tagId",
+            trigger: "triggerId",
+            variable: "variableId",
+            builtInVariable: "name",
+            customTemplate: "templateId"
+        }
     }),
 
     computed: {
