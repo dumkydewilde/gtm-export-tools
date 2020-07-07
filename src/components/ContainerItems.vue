@@ -9,11 +9,12 @@
                 <v-checkbox
                     v-model="item.options.selected"
                     dense
-                    class="float-left mx-0 mt-5"
+                    class="mx-0 mt-5"
                     @click.native.stop
                     :color="itemTypeColor[itemType]"
+                    style="max-width: 30px;"
                 ></v-checkbox>
-                <h2 class="subtitle-2">
+                <h2 class="subtitle-2 text-left">
                     <span v-if="item.options.editing">
                         <v-icon 
                         class="float-right mt-5"
@@ -26,7 +27,6 @@
                         v-model="item.content.name"
                         @click.native.stop
                         dense
-                        style="max-width:80%;"
                         class="mt-4"
                         >
                         </v-text-field>

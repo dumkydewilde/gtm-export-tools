@@ -1,5 +1,29 @@
 <template>
   <v-app>
+    <v-snackbar 
+        v-model="dialogs.alert.active"
+        top
+        right
+        multi-line
+        absolute
+        timeout="8000"
+        color="grey darken-4"
+        style="opacity: 0.9;z-index:999;"
+        class="text--grey text--darken-4"
+        >
+        {{dialogs.alert.message}}
+        <template v-slot:action="{ attrs }">
+        <v-btn
+          dark
+          text
+          v-bind="attrs"
+          @click="dialogs.alert.active = false"
+        >
+          X
+        </v-btn>
+      </template>
+    </v-snackbar>
+
     <v-app-bar
       app
       color="indigo darken-3"
@@ -61,20 +85,6 @@
     </v-app-bar>
 
     <v-content app>
-      <v-container fluid v-if="dialogs.alert.active">
-        <v-row justify="space-around" v-model="dialogs.alert.active">
-          <v-col cols="10">
-          <v-alert 
-          v-model="dialogs.alert.active"
-          info text dismissible
-          :type="dialogs.alert.type" 
-          border="left"
-          >{{dialogs.alert.message}}
-          </v-alert>
-          </v-col>
-        </v-row>
-      </v-container>
-
       <v-container fluid class="fill-height" v-if="!containerLoading && !containerLoaded">
         <v-row justify="space-around" align="center">
           <v-col cols="6" align="center">
@@ -198,7 +208,7 @@
           </v-col>
           
         </v-row>
-        <v-row justify="space-between" align="start">
+        <v-row justify="space-around" align="start">
           <v-col cols="3">
             <h2>Tags
               <v-checkbox 
@@ -258,8 +268,9 @@
           </v-col>
 
           <v-col cols="3">
-            <h2>Custom Templates
+            <h2 :class="customTemplate.length == 0 ? 'grey--text text--lighten-1' : ''">Custom Templates
               <v-checkbox 
+              v-if="customTemplate.length > 0"
               class="float-right mt-1" 
               label="Select All" 
               v-model="selectAll.customTemplate"
@@ -274,8 +285,9 @@
             :selectedFilters="selectedFilters"
             key="containerCustomTemplates"></ContainerItems>
             
-            <h2 class="mt-7">Built-in Variables
+            <h2 class="mt-7" :class="builtInVariable.length == 0 ? 'grey--text text--lighten-1' : ''">Built-in Variables
               <v-checkbox 
+              v-if="builtInVariable.length > 0"
               class="float-right mt-1" 
               label="Select All" 
               v-model="selectAll.builtInVariable"
@@ -567,30 +579,37 @@ export default {
                   }
                 }
             });
-          this.builtInVariable = container.containerVersion.builtInVariable.map(content => {
-            return {
-                content: content,
-                options: {
-                  showDetails: false,
-                  selected: true,
-                  editing: false,
-                  hasDependencies: true,
-                  folder: false
+
+          if(container.containerVersion.builtInVariable) {
+            this.builtInVariable = container.containerVersion.builtInVariable.map(content => {
+              return {
+                  content: content,
+                  options: {
+                    showDetails: false,
+                    selected: true,
+                    editing: false,
+                    hasDependencies: true,
+                    folder: false
+                    }
                   }
-                }
-            });
-          this.customTemplate = container.containerVersion.customTemplate.map(content => {
-            return {
-                content: content,
-                options: {
-                  showDetails: false,
-                  selected: true,
-                  editing: false,
-                  hasDependencies: true,
-                  folder: false
+              });
+          }
+
+          if(container.containerVersion.customTemplate) {
+            this.customTemplate = container.containerVersion.customTemplate.map(content => {
+              return {
+                  content: content,
+                  options: {
+                    showDetails: false,
+                    selected: true,
+                    editing: false,
+                    hasDependencies: true,
+                    folder: false
+                    }
                   }
-                }
-            });
+              });
+          }
+
           this.folders = container.containerVersion.folder || [];
 
           this.containerDetails = {
