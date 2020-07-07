@@ -4,6 +4,7 @@ node_modules
 /.firebase
 /cypress/integration/examples
 /cypress/integration/examples/**
+.firebase
 
 # local env files
 .env.local
