@@ -671,6 +671,15 @@ export default {
           numItems++;
         }
       })
+
+      // Tags with ended schedules
+      this.tags.forEach(e => {
+        if (parseInt(e.content.scheduleEndMs) < Date.now()) {
+          e.options.selected = false;
+          e.options.hasDependencies = false;
+          numItems++;
+        }
+      })
     
     this.dialogs.alert = {
       active: true,
