@@ -72,13 +72,32 @@
                         </v-list-item>
                     </div>
 
-                    <div v-if="typeof(item.content.monitoringMetadata) !== 'undefined'">
+                    <div v-if="Object.keys(item.content.monitoringMetadata || {}).length > 1">
                         <h2 class="overline">Monitoring Key</h2>
                         <v-list-item dense>
                         <v-list-item-content>
                             <v-list-item-title>{{item.content.monitoringMetadataTagNameKey}}</v-list-item-title>
                         </v-list-item-content>
                         </v-list-item>
+                    </div>
+
+                    <div v-if="item.content.hasOwnProperty('scheduleEndMs')">
+                        <h2 class="overline">Schedule</h2>
+                        <v-list-item dense>
+                            <v-list-item-content>
+                                <v-list-item-title>
+                                    Start: {{new Date(item.content.scheduleStartMs).toUTCString()}} — 
+                                </v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item dense>
+                            <v-list-item-content>
+                                <v-list-item-title>
+                                    End: {{new Date(item.content.scheduleEndMs).toUTCString()}}
+                                </v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+                        
                     </div>
                     
                     <div>
@@ -182,6 +201,6 @@ export default {
             })
         }
     }
-
+    
     }
 </script>
